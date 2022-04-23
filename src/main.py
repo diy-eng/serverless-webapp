@@ -1,8 +1,10 @@
 import boto3
 
+connect = boto3.client('connect')
+
 def main(event, lambda_context):
 
-    qParams = event["queryStringParameters"]
+    qParams = event.get("queryStringParameters")
     print("Params: ", qParams)
 
     cFlowId = qParams.get("contactflowid")
@@ -18,5 +20,15 @@ def main(event, lambda_context):
 
     # https://docs.aws.amazon.com/connect/latest/APIReference/API_StartOutboundVoiceContact.html
     print("call aws")
+    response = connect.start_outbound_voice_contact(
+        ContactFlowId=cFlowId,
+        DestinationPhoneNumber=destPhone,
+        InstanceId=iId,
+        QueueId=queueId,
+        # Attributes=attrs,
+        # SourcePhoneNumber=sourcePhone
+    )
+
+    print(response)
 
     return {"message": "Call to +1XXXXXX Succedded"}
