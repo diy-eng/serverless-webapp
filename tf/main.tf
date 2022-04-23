@@ -17,13 +17,7 @@ module "lambda_function" {
   }
 }
 
-# LOCAL EXEC TO ENABLE URL
-resource "null_resource" "create-function-url-config" {
-  provisioner "local-exec" {
-    command = "aws lambda create-function-url-config --function-name ${module.lambda_function.lambda_function_arn} --auth-type='NONE'"
-  }
-
-  depends_on = [
-    module.lambda_function.webapp-api-backend
-  ]
+resource "aws_lambda_function_url" "test_latest" {
+  function_name      = module.lambda_function.lambda_function_arn
+  authorization_type = "NONE"
 }
