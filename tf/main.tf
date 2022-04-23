@@ -21,3 +21,7 @@ resource "aws_lambda_function_url" "test_latest" {
   function_name      = module.lambda_function.lambda_function_arn
   authorization_type = "NONE"
 }
+
+output "lambda_url" {
+  value = aws_lambda_function_url.test_latest.function_url
+}
