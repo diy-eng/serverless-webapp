@@ -14,21 +14,22 @@ def main(event, lambda_context):
     attrs = qParams.get("attributes")
     sourcePhone = qParams.get("sourcephonenumber")
 
-    for item in [cFlowId, destPhone, iId, queueId, attrs, sourcePhone]:
+    # Ensure required params are set
+    for item in [cFlowId, destPhone, iId, queueId, sourcePhone]:
         if not item:
             raise ValueError("Missing required paramiter")
 
     # https://docs.aws.amazon.com/connect/latest/APIReference/API_StartOutboundVoiceContact.html
     print("call aws")
-    response = connect.start_outbound_voice_contact(
-        ContactFlowId=cFlowId,
-        DestinationPhoneNumber=destPhone,
-        InstanceId=iId,
-        QueueId=queueId,
-        # Attributes=attrs,
-        # SourcePhoneNumber=sourcePhone
-    )
+    # TODO: Implement
+    # response = connect.start_outbound_voice_contact(
+    #     ContactFlowId=cFlowId,
+    #     DestinationPhoneNumber=destPhone,
+    #     InstanceId=iId,
+    #     QueueId=queueId,
+    #     # Attributes=attrs,
+    #     # SourcePhoneNumber=sourcePhone
+    # )
+    # print(response)
 
-    print(response)
-
-    return {"message": "Call to +1XXXXXX Succedded"}
+    return {"message": f"Call to {sourcePhone} Succedded"}
