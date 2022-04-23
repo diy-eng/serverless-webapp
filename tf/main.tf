@@ -8,9 +8,9 @@ module "lambda_function" {
   function_name = "webapp-api-backend"
   description   = "API Backend"
   handler       = "main.main"
-  runtime       = "python3.8"
+  runtime       = "python3.9"
 
-  source_path = "../src/"
+  source_path = "../src/backend"
 
   tags = {
     Name = "webapp-api-backend"

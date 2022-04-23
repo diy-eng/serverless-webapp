@@ -15,7 +15,7 @@ RUN mv terraform /usr/local/bin/
 # RUN unzip awscliv2.zip
 # RUN ./aws/install
 
-RUN chmod u+x ./src/main.py
+RUN chmod u+x ./src/backend/main.py
 WORKDIR /opt/serverless-webapp/tf
 RUN terraform init
 
