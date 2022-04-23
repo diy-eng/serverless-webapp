@@ -11,10 +11,12 @@ RUN mv terraform /usr/local/bin/
 
 
 ### Install AWS CLI
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
-RUN unzip awscliv2.zip
-RUN ./aws/install
+# RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+# RUN unzip awscliv2.zip
+# RUN ./aws/install
 
 RUN chmod u+x ./src/main.py
+WORKDIR /opt/serverless-webapp/tf
+RUN terraform init
 
-ENTRYPOINT [ "./src/main.py" ]
+ENTRYPOINT [ "terraform", "apply", "-auto-approve" ]
