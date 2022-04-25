@@ -4,38 +4,62 @@ provider "aws" {
 
 #########
 # S3 SITE
-resource "aws_s3_bucket" "www_bucket" {
-  bucket = "www.${var.bucket_name}"
+
+variable "domain_name" {
+  type    = string
+  default = "auto-call-webapp-333.example.com"
+}
+
+variable "frontend_path" {
+  type    = string
+  default = "../src/frontend"
+}
+
+# create a bucket
+resource "aws_s3_bucket" "aws_s3_bucket_website" {
+  bucket  = "www.${var.domain_name}"
+}
+
+# create bucket policy
+resource "aws_s3_bucket_policy" "portal_policy" {
+  bucket = aws_s3_bucket.aws_s3_bucket_website.id
+
+  policy = <<POLICY
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "${aws_s3_bucket.aws_s3_bucket_website.arn}/*"
+        }
+    ]
+}
+POLICY
+}
+
+resource "aws_s3_object" "website_files" {
+  bucket = aws_s3_bucket.aws_s3_bucket_website.bucket
+  key = "index.html"
+  source = "${var.frontend_path}/index.html"
   acl = "public-read"
-  policy = templatefile("templates/s3-policy.json", { bucket = "www.${var.bucket_name}" })
+
+  content_type = "text/html"
+}
+
+resource "aws_s3_bucket_cors_configuration" "example" {
+  bucket = aws_s3_bucket.aws_s3_bucket_website.id
 
   cors_rule {
-    allowed_headers = ["Authorization", "Content-Length"]
-    allowed_methods = ["GET", "POST"]
-    allowed_origins = ["https://www.${var.domain_name}"]
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["https://s3-website-test.hashicorp.com"]
+    expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }
-
-  website {
-    index_document = "index.html"
-    error_document = "404.html"
-  }
-
-  tags = var.common_tags
 }
 
-# S3 bucket for redirecting non-www to www.
-resource "aws_s3_bucket" "root_bucket" {
-  bucket = var.bucket_name
-  acl = "public-read"
-  policy = templatefile("templates/s3-policy.json", { bucket = var.bucket_name })
-
-  website {
-    redirect_all_requests_to = "https://www.${var.domain_name}"
-  }
-
-  tags = var.common_tags
-}
 
 ########
 # LAMBDA
@@ -72,3 +96,6 @@ resource "aws_lambda_function_url" "test_latest" {
 output "lambda_url" {
   value = aws_lambda_function_url.test_latest.function_url
 }
+
+# Other Services
+# E.G. Connect
