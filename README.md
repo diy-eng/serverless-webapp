@@ -9,8 +9,6 @@ Vanilla js app with a form that calls the Lambda function URL.
 # Backend
 Lambda function that uses [Lambda URL](example.com). Runs a python script located at `serverless-webapp/src/backend/main.py`.
 
-TODO: Deploy fe to S3
-
 ## PATH
 `serverless-webapp/src/backend`
 
@@ -22,6 +20,7 @@ TODO: Deploy fe to S3
 The docker container executes terraform that deploys the lambda function
 
 TODO: Add github action
+TODO: add s3 state to TF
 
 ### serverless-webapp
 
