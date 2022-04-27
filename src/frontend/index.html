@@ -1,0 +1,93 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Auto Caller!</title>
+    <style>
+        header {
+            background-color: #666;
+            padding: 30px;
+            text-align: center;
+            font-size: 35px;
+            color: white;
+        }
+
+        body {
+            -webkit-flex: 3;
+            -ms-flex: 3;
+            flex: 3;
+            background-color: #f1f1f1;
+            padding: 10px;
+            height: 100vh;
+        }
+
+        .content {
+            max-width: 500px;
+            margin: auto;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <h1>Auto Caller!</h1>
+    </header>
+    <div class="content">
+        <h2>Fill out the form below to initiate a call!</h2>
+        <form>
+            <label for="lambdaurl">Lambda URL (do not include protocol or trailing slash):</label><br>
+            <input type="text" id="lambdaurl" name="lambdaurl"><br>
+            <label for="contactflowid">Contact Flow Id:</label><br>
+            <input type="text" id="contactflowid" name="contactflowid"><br>
+            <label for="destinationphonenumber">Destination Phone Number:</label><br>
+            <input type="text" id="destinationphonenumber" name="destinationphonenumber"><br>
+            <label for="instanceid">Instance Id:</label><br>
+            <input type="text" id="instanceid" name="instanceid"><br>
+            <label for="queueid">Queue Id:</label><br>
+            <input type="text" id="queueid" name="queueid"><br>
+            <!-- <label for="attributes">Attributes:</label><br>
+            <input type="text" id="attributes" name="attributes"><br> -->
+            <label for="sourcephonenumber">Source Phone Number:</label><br>
+            <input type="text" id="sourcephonenumber" name="sourcephonenumber"><br>
+            <button id="call-lambda">Call!</button>
+        </form>
+        <p id="result"></p>
+    </div>
+
+
+    <script>
+        document.getElementById("call-lambda").onclick = (e) => {
+            console.log(">SUBMIT<");
+            e.preventDefault();
+            const lambdaurl = document.getElementById("lambdaurl").value;
+
+            
+
+            const contactflowid = document.getElementById("contactflowid").value;
+            const destinationphonenumber = document.getElementById("destinationphonenumber").value;
+            const instanceid=document.getElementById("instanceid").value;
+            const queueid=document.getElementById("queueid").value;
+            // attributes=document.getElementById("attributes").value;
+            const sourcephonenumber=document.getElementById("sourcephonenumber").value;
+
+            console.log(contactflowid, destinationphonenumber, instanceid, queueid, sourcephonenumber);
+            const endpoint = `https://${lambdaurl}/?destinationphonenumber=${destinationphonenumber}&instanceid=${instanceid}&queueid=${queueid}&contactflowid=${contactflowid}&instanceid=${instanceid}&sourcephonenumber=${sourcephonenumber}`
+
+            fetch(endpoint)
+                .then(res => {
+                    console.log(res);
+                    document.getElementById("result").innerText = `Calling ${destinationphonenumber}`
+                })
+                .catch(res => {
+                    console.log(res);
+                    document.getElementById("result").innerText = `Call to ${destinationphonenumber} failed`
+                })
+        }
+    </script>
+</body>
+
+</html>
